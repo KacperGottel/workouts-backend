@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:43307/workouts_db?sessionVariables=sql_mode=''&serverTimezone=Europe/Warsaw
+    username: workouts
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database: mysql
+rsa:
+  public-key: 'classpath:\certs\pubic.pem'
+  private-key: 'classpath:\certs\private.pem'
