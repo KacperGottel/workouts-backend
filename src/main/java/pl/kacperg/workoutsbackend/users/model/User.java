@@ -6,9 +6,6 @@ import lombok.*;
 
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -24,6 +21,7 @@ public class User implements Serializable {
     private String email;
     private String username;
     private String password;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Scope scope;
 
 }

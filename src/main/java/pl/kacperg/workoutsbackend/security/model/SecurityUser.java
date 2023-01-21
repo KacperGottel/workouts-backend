@@ -8,9 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.kacperg.workoutsbackend.users.model.User;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+
+import static java.util.Arrays.stream;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
+        return stream(user.getScope().getScopes().split(",")).toList().stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override

@@ -5,13 +5,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.kacperg.workoutsbackend.users.dto.UserDTO;
 import pl.kacperg.workoutsbackend.users.exception.UserAlreadyExistsException;
-import pl.kacperg.workoutsbackend.users.model.Role;
+import pl.kacperg.workoutsbackend.users.model.Scope;
 import pl.kacperg.workoutsbackend.users.model.User;
 import pl.kacperg.workoutsbackend.users.repository.UserRepository;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +25,6 @@ public class UserService {
                             userDTO.email,
                             userDTO.username,
                             this.encoder.encode(userDTO.password),
-                            Role.USER.getRoleName()));
+                            Scope.USER));
     }
 }
