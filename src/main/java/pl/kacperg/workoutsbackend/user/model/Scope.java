@@ -1,4 +1,4 @@
-package pl.kacperg.workoutsbackend.users.model;
+package pl.kacperg.workoutsbackend.user.model;
 
 import lombok.Getter;
 

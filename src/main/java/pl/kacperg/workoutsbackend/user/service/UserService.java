@@ -1,13 +1,16 @@
-package pl.kacperg.workoutsbackend.users.service;
+package pl.kacperg.workoutsbackend.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.kacperg.workoutsbackend.users.dto.UserDTO;
-import pl.kacperg.workoutsbackend.users.exception.UserAlreadyExistsException;
-import pl.kacperg.workoutsbackend.users.model.Scope;
-import pl.kacperg.workoutsbackend.users.model.User;
-import pl.kacperg.workoutsbackend.users.repository.UserRepository;
+import pl.kacperg.workoutsbackend.user.dto.UserDTO;
+import pl.kacperg.workoutsbackend.user.exception.UserAlreadyExistsException;
+import pl.kacperg.workoutsbackend.user.model.Scope;
+import pl.kacperg.workoutsbackend.user.model.User;
+import pl.kacperg.workoutsbackend.user.model.UserStatus;
+import pl.kacperg.workoutsbackend.user.repository.UserRepository;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,9 @@ public class UserService {
                             userDTO.email,
                             userDTO.username,
                             this.encoder.encode(userDTO.password),
-                            Scope.USER));
+                            Scope.USER,
+                            LocalDateTime.now(),
+                            LocalDateTime.now().plusYears(1),
+                            UserStatus.DISABLED));
     }
 }

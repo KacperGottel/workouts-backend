@@ -1,4 +1,4 @@
-package pl.kacperg.workoutsbackend.users.exception;
+package pl.kacperg.workoutsbackend.user.exception;
 
 public class UserAlreadyExistsException extends Exception {
     public UserAlreadyExistsException(String message) {

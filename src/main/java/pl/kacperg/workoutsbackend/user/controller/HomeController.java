@@ -1,4 +1,4 @@
-package pl.kacperg.workoutsbackend.users.controller;
+package pl.kacperg.workoutsbackend.user.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;

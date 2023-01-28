@@ -1,7 +1,7 @@
-package pl.kacperg.workoutsbackend.users.repository;
+package pl.kacperg.workoutsbackend.user.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pl.kacperg.workoutsbackend.users.model.User;
+import pl.kacperg.workoutsbackend.user.model.User;
 
 import java.util.Optional;
 

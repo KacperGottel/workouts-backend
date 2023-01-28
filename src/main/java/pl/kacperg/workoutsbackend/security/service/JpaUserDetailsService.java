@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.kacperg.workoutsbackend.security.model.SecurityUser;
-import pl.kacperg.workoutsbackend.users.repository.UserRepository;
+import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 
 @RequiredArgsConstructor
 @Service
