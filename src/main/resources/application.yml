@@ -16,3 +16,5 @@ spring:
 rsa:
   public-key: 'classpath:\certs\pubic.pem'
   private-key: 'classpath:\certs\private.pem'
+app:
+  version: ^project.version^
