@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  workouts_db:
+    image: mysql:8.0.28
+    ports:
+      - 43307:3306
+    environment:
+      MYSQL_DATABASE: workouts_db
+      MYSQL_USER: workouts
+      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1234
