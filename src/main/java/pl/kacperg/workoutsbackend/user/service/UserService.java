@@ -47,7 +47,7 @@ public class UserService {
         UserToken userToken = UserToken.of()
                 .id(0L)
                 .user(user)
-                .token(tokenService.generateUserToken(user))
+                .token(tokenService.generateUserToken())
                 .build();
         return userTokenRepository.save(userToken);
     }
@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public User createNewUser(UserRegisterDTO registerDTO) {
         return this.userRepository.save(
-                new User(0L,
+                new User(null,
                         registerDTO.email,
                         registerDTO.username,
                         this.encoder.encode(registerDTO.password),

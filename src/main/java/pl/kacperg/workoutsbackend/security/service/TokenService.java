@@ -12,6 +12,7 @@ import pl.kacperg.workoutsbackend.user.model.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +22,7 @@ public class TokenService {
 
     private final JwtEncoder encoder;
 
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
         String scope = authentication.getAuthorities()
                 .stream()
@@ -37,15 +38,7 @@ public class TokenService {
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public String generateUserToken(User user){
-        Instant now = Instant.now();
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(300, ChronoUnit.DAYS))
-                .subject(user.getUsername())
-                .claim("scope", user.getScope())
-                .build();
-        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    public String generateUserToken() {
+        return UUID.randomUUID().toString();
     }
 }
