@@ -22,7 +22,7 @@ public class UserToUserDtoConverter extends AbstractConverter<User, UserDTO>{
                 .id(user.getId())
                 .created(user.getCreated().toString())
                 .expired(user.getExpired().toString())
-                .authority(user.getScope().getScope())
+                .authority(user.getScope().name())
                 .email(user.getEmail())
                 .userToken(userTokenRepository.findByUserId(user.getId()).getToken())
                 .status(user.getUserStatus().name())

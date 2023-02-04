@@ -18,7 +18,7 @@ public class UserSignUpController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> signUp(@Validated @RequestBody UserRegisterDTO userDTO) throws UserAlreadyExistsException {
+    public ResponseEntity<UserDTO> signUp(@Validated @RequestBody UserRegisterDTO userDTO) throws UserAlreadyExistsException {
         UserDTO dto = this.userService.signUp(userDTO);
         return ResponseEntity.ok(dto);
     }
