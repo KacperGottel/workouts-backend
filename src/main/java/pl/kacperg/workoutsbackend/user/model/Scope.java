@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum Scope {
     ADMIN("ADMIN"), USER("USER");
 
-    private final String scopes;
+    private final String scope;
     Scope(String scope) {
-        this.scopes = scope;
+        this.scope = scope;
     }
 }

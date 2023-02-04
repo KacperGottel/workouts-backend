@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### other ###
+/src/main/resources/certs/private.pem

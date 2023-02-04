@@ -43,8 +43,8 @@ public class SecurityConfig {
     private final JpaUserDetailsService jpaUserDetailsService;
 
     private static final String[] AUTH_WHITELIST = {
-            "/token",
-            "/signup"
+            "/api/v1/token",
+            "/api/v1/signup/user"
     };
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

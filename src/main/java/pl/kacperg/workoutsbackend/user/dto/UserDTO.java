@@ -2,18 +2,27 @@ package pl.kacperg.workoutsbackend.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NonNull;
+import lombok.experimental.SuperBuilder;
+
 
 @Data
+@SuperBuilder(builderMethodName = "of")
 public class UserDTO {
 
+    @JsonProperty("id")
+    private Long id;
     @JsonProperty("email")
-    @NonNull
-    public String email;
-    @JsonProperty("password")
-    @NonNull
-    public String password;
+    private String email;
     @JsonProperty("username")
-    @NonNull
-    public String username;
+    private String username;
+    @JsonProperty("scope")
+    private String authority;
+    @JsonProperty("status")
+    private String status;
+    @JsonProperty("user_token")
+    private String userToken;
+    @JsonProperty("created")
+    private String created;
+    @JsonProperty("expired")
+    private String expired;
 }

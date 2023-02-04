@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.kacperg.workoutsbackend.security.service.TokenService;
 
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/api/v1/token")
 @Slf4j
 @RequiredArgsConstructor
 @CrossOrigin
