@@ -17,6 +17,7 @@ import pl.kacperg.workoutsbackend.user.model.UserStatus;
 import pl.kacperg.workoutsbackend.user.model.UserToken;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
+import pl.kacperg.workoutsbackend.utils.email.EmailService;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +31,7 @@ public class UserService {
     private final TokenService tokenService;
     private final UserTokenRepository userTokenRepository;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
 
     @Transactional
     public UserDTO signUp(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException {
@@ -40,6 +42,7 @@ public class UserService {
         log.info("NEW USER CREATED: {}", user);
         UserToken userToken = createUserToken(user);
         log.info("NEW USER TOKEN CREATED: {} | FOR USER EMAIL: {}", userToken, user.getEmail());
+        this.emailService.sendInitEmail(registerDTO.email);
         return modelMapper.map(user, UserDTO.class);
     }
 
