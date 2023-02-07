@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
@@ -45,8 +47,7 @@ class UserServiceTest {
     @Test
     void signUp() throws UserAlreadyExistsException {
         UserRegisterDTO userRegisterDTO = new UserRegisterDTO("email@email.com", "password", "User");
-        UserDTO userDTO = this.userService.signUp(userRegisterDTO);
-        User userEntity = User.of()
+        User user = User.of()
                 .id(1L)
                 .username("User")
                 .created(LocalDateTime.now())
@@ -58,25 +59,76 @@ class UserServiceTest {
                 .build();
         UserToken userToken = UserToken.of()
                 .id(1L)
-                .user(userEntity)
-                .token(tokenService.generateUserToken())
+                .user(user)
+                .token("123")
+                .build();
+        UserDTO userDTO = UserDTO.of()
+                .id(user.getId())
+                .created(user.getCreated().toString())
+                .expired(user.getExpired().toString())
+                .authority(user.getScope().name())
+                .email(user.getEmail())
+                .userToken(String.valueOf(userToken))
+                .status(user.getUserStatus().name())
+                .username(user.getUsername())
                 .build();
         Mockito.when(this.userRepository.findByEmail(userRegisterDTO.email)).thenReturn(Optional.empty());
-        Mockito.when(this.userRepository.save(userEntity)).thenReturn(userEntity);
-        Mockito.when(this.userService.createNewUser(userRegisterDTO)).thenReturn(userEntity);
-        Mockito.when(this.userService.createUserToken(userEntity)).thenReturn(userToken);
+        Mockito.when(this.userRepository.save(any())).thenReturn(user);
+//        Mockito.when(this.userService.createNewUser(any())).thenReturn(user);
+//        Mockito.when(this.userService.createUserToken(any())).thenReturn(userToken);
+        Mockito.when(this.modelMapper.map(any(), any())).thenReturn(userDTO);
+        UserDTO result = this.userService.signUp(userRegisterDTO);
         Assertions.assertAll(
-                () -> assertNotNull(userDTO.getId()),
-                () -> assertEquals(userDTO.getUsername(), userRegisterDTO.username),
-                () -> assertEquals(userDTO.getEmail(), userRegisterDTO.email)
+                () -> assertNotNull(result.getId()),
+                () -> assertEquals(result.getUsername(), userRegisterDTO.username),
+                () -> assertEquals(result.getEmail(), userRegisterDTO.email)
         );
     }
 
     @Test
     void createUserToken() {
+        User userEntity = User.of()
+                .id(1L)
+                .username("User")
+                .created(LocalDateTime.now())
+                .expired(LocalDateTime.now().plusYears(30))
+                .password(this.encoder.encode("password"))
+                .scope(Scope.USER)
+                .email("email@email.com")
+                .userStatus(UserStatus.DISABLED)
+                .build();
+
+        UserToken token = UserToken.of().token("TOKENTOKENTOKEN").id(0L).user(userEntity).build();
+
+        Mockito.when(userTokenRepository.save(any())).thenReturn(token);
+        Mockito.when(tokenService.generateUserToken()).thenReturn(token.getToken());
+        UserToken userToken = this.userService.createUserToken(userEntity);
+        Assertions.assertAll(
+                () -> assertEquals("TOKENTOKENTOKEN", userToken.getToken()),
+                () -> assertEquals(userToken.getUser(), userEntity)
+        );
+
     }
 
     @Test
     void createNewUser() {
+        UserRegisterDTO userRegisterDTO = new UserRegisterDTO("email@email.com", "password", "User");
+        User userEntity = User.of()
+                .id(1L)
+                .username("User")
+                .created(LocalDateTime.now())
+                .expired(LocalDateTime.now().plusYears(30))
+                .password(this.encoder.encode("password"))
+                .scope(Scope.USER)
+                .email("email@email.com")
+                .userStatus(UserStatus.DISABLED)
+                .build();
+        Mockito.when(this.userRepository.save(any())).thenReturn(userEntity);
+        User newUser = this.userService.createNewUser(userRegisterDTO);
+        Assertions.assertAll(
+                () -> assertEquals(userRegisterDTO.email, newUser.getEmail()),
+                () -> assertEquals(userRegisterDTO.username, newUser.getUsername())
+        );
+
     }
 }
