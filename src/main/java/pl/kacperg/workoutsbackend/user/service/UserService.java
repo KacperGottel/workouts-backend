@@ -1,5 +1,6 @@
 package pl.kacperg.workoutsbackend.user.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class UserService {
     private final EmailService emailService;
 
     @Transactional
-    public UserDTO signUp(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException {
+    public UserDTO signUp(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException, MessagingException {
         if (this.userRepository.findByEmail(registerDTO.email).isPresent()) {
             throw new UserAlreadyExistsException("User already exists");
         }
@@ -42,7 +43,7 @@ public class UserService {
         log.info("NEW USER CREATED: {}", user);
         UserToken userToken = createUserToken(user);
         log.info("NEW USER TOKEN CREATED: {} | FOR USER EMAIL: {}", userToken, user.getEmail());
-        this.emailService.sendInitEmail(registerDTO.email);
+        this.emailService.sendInitEmail(registerDTO, userToken.getToken());
         return modelMapper.map(user, UserDTO.class);
     }
 

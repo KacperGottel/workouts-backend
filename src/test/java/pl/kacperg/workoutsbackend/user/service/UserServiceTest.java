@@ -1,5 +1,6 @@
 package pl.kacperg.workoutsbackend.user.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.AssertTrue;
 import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -45,7 +46,7 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    void signUp() throws UserAlreadyExistsException {
+    void signUp() throws UserAlreadyExistsException, MessagingException {
         UserRegisterDTO userRegisterDTO = new UserRegisterDTO("email@email.com", "password", "User");
         User user = User.of()
                 .id(1L)
