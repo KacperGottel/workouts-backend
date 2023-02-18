@@ -1,28 +1,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:remove="all">Template for HTML email</title>
+    <title th:remove="all">Welcome to Workouts!</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
 <p>
-    Hello, <span th:text="${name}">Peter Static</span>!
-</p>
-<p th:if="${name.length() > 10}">
-    Wow! You've got a long name (more than 10 chars)!
+    Hello, <span th:text="${name}">Name Static</span>!
 </p>
 <p>
-    You have been successfully subscribed to the <b>CodingNConcepts</b> on
-    <span th:text="${link}">28-12-2012</span>
+    You have been successfully signed up to the <b>Workouts!</b>
 </p>
-<p>We write on following technologies:-</p>
-<ul th:remove="all-but-first">
-<!--    <li th:each="tech : ${link}" th:text="${tech}">Java</li>-->
-    <li>JavaScript</li>
-    <li>CSS</li>
-</ul>
+<p>Click the link to confirm registration
+    <span th:text="${link}">www.google.pl</span>
+</p>
+<p>
+    If You did not register in Workouts! service please ignore this email.
+</p>
 <p>
     Regards, <br/>
-    <em>The CodingNConcepts Team</em>
+    <em>The Workouts! Team</em>
 </p>
 </body>
 </html>

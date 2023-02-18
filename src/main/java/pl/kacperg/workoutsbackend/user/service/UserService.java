@@ -40,10 +40,10 @@ public class UserService {
             throw new UserAlreadyExistsException("User already exists");
         }
         User user = createNewUser(registerDTO);
-        log.info("NEW USER CREATED: {}", user);
+        log.info("NEW USER CREATED: {}", user.getEmail());
         UserToken userToken = createUserToken(user);
-        log.info("NEW USER TOKEN CREATED: {} | FOR USER EMAIL: {}", userToken, user.getEmail());
-        this.emailService.sendInitEmail(registerDTO, userToken.getToken());
+        log.info("NEW TOKEN CREATED FOR: {}", user.getEmail());
+        this.emailService.sendInitTokenEmail(registerDTO, userToken.getToken());
         return modelMapper.map(user, UserDTO.class);
     }
 
@@ -69,5 +69,9 @@ public class UserService {
                         LocalDateTime.now(),
                         LocalDateTime.now().plusYears(1),
                         UserStatus.DISABLED));
+    }
+
+    public void confirmUserToken(String token) {
+        this.tokenService.verifyUserToken(token);
     }
 }

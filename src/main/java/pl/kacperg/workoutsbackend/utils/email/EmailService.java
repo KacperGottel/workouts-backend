@@ -25,22 +25,21 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String email;
 
-    public void sendInitEmail(@Valid UserRegisterDTO registerDTO, String token) throws MessagingException {
+    public void sendInitTokenEmail(@Valid UserRegisterDTO registerDTO, String token) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
         Context context = new Context();
         HashMap<String, Object> variables = new HashMap<>();
-        String link = "link.pl/" + token;
+        String link = "http://localhost:8080/api/v1/signup/user/confirm/" + token;
         variables.put("name", registerDTO.username);
         variables.put("link", link);
         context.setVariables(variables);
         helper.setFrom(email);
         helper.setTo(registerDTO.email);
-        helper.setSubject("INITIAL MAIL WITH TOKEN");
+        helper.setSubject("Welcome to Workouts!");
         String html = templateEngine.process("init-email-token.html", context);
         helper.setText(html, true);
-
-        log.info("Sending email: {} with html body: {}", email, html);
+        log.info("Sending email to: {} with html body: {}", registerDTO.email, html);
         emailSender.send(message);
 
     }

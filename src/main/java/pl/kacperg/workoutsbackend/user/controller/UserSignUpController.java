@@ -23,4 +23,10 @@ public class UserSignUpController {
         UserDTO dto = this.userService.signUp(userDTO);
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/confirm/{token}")
+    public ResponseEntity<Void> confirm(@PathVariable String token){
+        this.userService.confirmUserToken(token);
+        return ResponseEntity.ok().build();
+    }
 }
