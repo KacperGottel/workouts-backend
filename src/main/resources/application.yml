@@ -4,8 +4,8 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:43307/workouts_db?sessionVariables=sql_mode=''&serverTimezone=Europe/Warsaw
-    username: workouts
-    password: 1234
+    username: 
+    password: 
   jpa:
     hibernate:
       ddl-auto: update
