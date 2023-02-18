@@ -44,7 +44,8 @@ public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/token",
-            "/api/v1/signup/user"
+            "/api/v1/signup/user",
+            "/api/v1/signup/user/confirm/**"
     };
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

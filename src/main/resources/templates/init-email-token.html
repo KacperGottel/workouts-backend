@@ -1,0 +1,24 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Welcome to Workouts!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p>
+    Hello, <span th:text="${name}">Name Static</span>!
+</p>
+<p>
+    You have been successfully signed up to the <b>Workouts!</b>
+</p>
+<p>Click the link to confirm registration
+    <span th:text="${link}">www.google.pl</span>
+</p>
+<p>
+    If You did not register in Workouts! service please ignore this email.
+</p>
+<p>
+    Regards, <br/>
+    <em>The Workouts! Team</em>
+</p>
+</body>
+</html>

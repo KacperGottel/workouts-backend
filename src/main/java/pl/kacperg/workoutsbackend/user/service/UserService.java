@@ -1,5 +1,6 @@
 package pl.kacperg.workoutsbackend.user.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import pl.kacperg.workoutsbackend.user.model.UserStatus;
 import pl.kacperg.workoutsbackend.user.model.UserToken;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
+import pl.kacperg.workoutsbackend.utils.email.EmailService;
 
 import java.time.LocalDateTime;
 
@@ -30,16 +32,18 @@ public class UserService {
     private final TokenService tokenService;
     private final UserTokenRepository userTokenRepository;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
 
     @Transactional
-    public UserDTO signUp(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException {
+    public UserDTO signUp(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException, MessagingException {
         if (this.userRepository.findByEmail(registerDTO.email).isPresent()) {
             throw new UserAlreadyExistsException("User already exists");
         }
         User user = createNewUser(registerDTO);
-        log.info("NEW USER CREATED: {}", user);
+        log.info("NEW USER CREATED: {}", user.getEmail());
         UserToken userToken = createUserToken(user);
-        log.info("NEW USER TOKEN CREATED: {} | FOR USER EMAIL: {}", userToken, user.getEmail());
+        log.info("NEW TOKEN CREATED FOR: {}", user.getEmail());
+        this.emailService.sendInitTokenEmail(registerDTO, userToken.getToken());
         return modelMapper.map(user, UserDTO.class);
     }
 
@@ -65,5 +69,9 @@ public class UserService {
                         LocalDateTime.now(),
                         LocalDateTime.now().plusYears(1),
                         UserStatus.DISABLED));
+    }
+
+    public void confirmUserToken(String token) {
+        this.tokenService.verifyUserToken(token);
     }
 }

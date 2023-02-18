@@ -1,5 +1,6 @@
 package pl.kacperg.workoutsbackend.user.controller;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,8 +19,14 @@ public class UserSignUpController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> signUp(@Validated @RequestBody UserRegisterDTO userDTO) throws UserAlreadyExistsException {
+    public ResponseEntity<UserDTO> signUp(@Validated @RequestBody UserRegisterDTO userDTO) throws UserAlreadyExistsException, MessagingException {
         UserDTO dto = this.userService.signUp(userDTO);
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/confirm/{token}")
+    public ResponseEntity<Void> confirm(@PathVariable String token){
+        this.userService.confirmUserToken(token);
+        return ResponseEntity.ok().build();
     }
 }
