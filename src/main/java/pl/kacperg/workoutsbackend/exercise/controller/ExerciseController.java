@@ -10,7 +10,7 @@ import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsExcep
 import pl.kacperg.workoutsbackend.exercise.service.ExerciseService;
 
 @RestController
-@RequestMapping("/api/v1/exercise")
+@RequestMapping("/api/v1/workout")
 @RequiredArgsConstructor
 @CrossOrigin
 public class ExerciseController {
