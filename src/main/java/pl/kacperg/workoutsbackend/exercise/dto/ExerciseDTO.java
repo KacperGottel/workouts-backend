@@ -8,7 +8,6 @@ import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
 @Data
 @SuperBuilder(builderMethodName = "of")
 public class ExerciseDTO {
-
     @JsonProperty("id")
     private Long id;
     @JsonProperty("category")
