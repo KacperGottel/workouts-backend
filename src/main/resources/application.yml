@@ -1,11 +1,11 @@
 server:
-  port: 8080
+  port: 9090
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:43307/workouts_db?sessionVariables=sql_mode=''&serverTimezone=Europe/Warsaw
-    username: 
-    password: 
+    username: workouts
+    password: 1234
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,18 +16,22 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: no-reply@workouts.com
-    password: ??????
+    username: workouts.service@gmail.com
+    password: hjfptqnbfhrkfslg
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+        debug: true
+    protocol: smtp
+    test-connection: false
 rsa:
   public-key: 'classpath:\certs\pubic.pem'
   private-key: 'classpath:\certs\private.pem'
 app:
   version: ^project.version^
+
 
 

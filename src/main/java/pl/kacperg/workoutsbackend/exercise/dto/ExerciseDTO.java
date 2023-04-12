@@ -20,4 +20,8 @@ public class ExerciseDTO {
     private String videoUrl;
     @JsonProperty("img_url")
     private String imgUrl;
+    @JsonProperty("series")
+    private String series;
+    @JsonProperty("reps")
+    private String reps;
 }

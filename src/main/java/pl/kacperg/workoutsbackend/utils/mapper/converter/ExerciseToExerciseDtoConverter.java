@@ -7,9 +7,6 @@ import org.modelmapper.AbstractConverter;
 import org.springframework.stereotype.Component;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
-import pl.kacperg.workoutsbackend.user.dto.UserDTO;
-import pl.kacperg.workoutsbackend.user.model.User;
-import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
 
 @Getter
 @Setter
@@ -26,6 +23,8 @@ public class ExerciseToExerciseDtoConverter extends AbstractConverter<Exercise, 
                 .description(exercise.getDescription())
                 .videoUrl(exercise.getVideoUrl())
                 .imgUrl(exercise.getImgUrl())
+                .reps(String.valueOf(exercise.getReps()))
+                .series(String.valueOf(exercise.getSeries()))
                 .build();
     }
 }

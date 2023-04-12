@@ -29,5 +29,8 @@ public class Exercise {
     private String videoUrl;
     @Column(name = "img_url")
     private String imgUrl;
-
+    @Column(name = "series")
+    private Integer series;
+    @Column(name = "reps")
+    private Integer reps;
 }
