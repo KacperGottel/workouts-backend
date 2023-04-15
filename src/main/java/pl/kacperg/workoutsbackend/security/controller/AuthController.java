@@ -22,9 +22,8 @@ public class AuthController {
 
     @PostMapping()
     public ResponseEntity<TokenDTO> token(Authentication authentication) {
-        log.info("User name: {}", authentication.getName());
+        log.info("User logged: {}", authentication.getName());
         String token = tokenService.generateToken(authentication);
-        log.info("token: {}", token);
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken(token);
         return ResponseEntity.ok(tokenDTO);
