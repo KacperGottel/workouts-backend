@@ -25,14 +25,10 @@ public class ExerciseService {
 
     public WorkoutDTO drawWorkout() {
         return WorkoutDTO.of()
-                .mobility(modelMapper.map(findRandomByCategory(MOBILITY), ExerciseDTO.class))
-                .plyo(modelMapper.map(findRandomByCategory(PLYO), ExerciseDTO.class))
                 .push(modelMapper.map(findRandomByCategory(PUSH), ExerciseDTO.class))
                 .pull(modelMapper.map(findRandomByCategory(PULL), ExerciseDTO.class))
-                .legsPush(modelMapper.map(findRandomByCategory(LEGS_PUSH), ExerciseDTO.class))
-                .legsPull(modelMapper.map(findRandomByCategory(LEGS_PULL), ExerciseDTO.class))
+                .legs(modelMapper.map(findRandomByCategory(LEGS), ExerciseDTO.class))
                 .accessory(modelMapper.map(findRandomByCategory(ACCESSORY), ExerciseDTO.class))
-                .abs(modelMapper.map(findRandomByCategory(ABS), ExerciseDTO.class))
                 .build();
     }
 
