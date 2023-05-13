@@ -65,8 +65,6 @@ public class SecurityConfig {
                 .httpBasic(withDefaults())
                 .logout()
                 .logoutUrl("/api/v1/logout")
-                .logoutSuccessHandler((request, response, authentication) ->
-                        log.info("User logged out: {}", authentication.getName()))
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .and()
