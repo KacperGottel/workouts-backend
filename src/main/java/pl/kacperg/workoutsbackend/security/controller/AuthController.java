@@ -22,7 +22,7 @@ public class AuthController {
 
     @PostMapping()
     public ResponseEntity<TokenDTO> token(Authentication authentication) {
-        log.info("User logged: {}", authentication.getName());
+        log.info("User logged in: {}", authentication.getName());
         String token = tokenService.generateToken(authentication);
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken(token);

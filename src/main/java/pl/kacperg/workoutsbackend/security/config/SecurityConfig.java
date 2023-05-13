@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -37,6 +38,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity()
+@Slf4j
 public class SecurityConfig {
 
     private final RsaKeyProperties rsaKeys;
@@ -48,6 +50,7 @@ public class SecurityConfig {
             "/api/v1/signup/user",
             "/api/v1/signup/user/confirm/**"
     };
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -60,6 +63,13 @@ public class SecurityConfig {
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .headers(headers -> headers.frameOptions().sameOrigin())
                 .httpBasic(withDefaults())
+                .logout()
+                .logoutUrl("/api/v1/logout")
+                .logoutSuccessHandler((request, response, authentication) ->
+                        log.info("User logged out: {}", authentication.getName()))
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .and()
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
@@ -83,6 +93,7 @@ public class SecurityConfig {
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
