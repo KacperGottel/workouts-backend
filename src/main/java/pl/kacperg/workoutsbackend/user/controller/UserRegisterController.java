@@ -14,13 +14,13 @@ import pl.kacperg.workoutsbackend.user.service.UserService;
 @RequestMapping("/api/v1/signup/user")
 @RequiredArgsConstructor
 @CrossOrigin
-public class UserSignUpController {
+public class UserRegisterController {
 
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> signUp(@Validated @RequestBody UserRegisterDTO userDTO) throws UserAlreadyExistsException, MessagingException {
-        UserDTO dto = this.userService.signUp(userDTO);
+    public ResponseEntity<UserDTO> register(@Validated @RequestBody UserRegisterDTO userDTO) throws UserAlreadyExistsException, MessagingException {
+        UserDTO dto = this.userService.register(userDTO);
         return ResponseEntity.ok(dto);
     }
 

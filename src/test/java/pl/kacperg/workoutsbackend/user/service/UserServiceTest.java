@@ -1,8 +1,6 @@
 package pl.kacperg.workoutsbackend.user.service;
 
 import jakarta.mail.MessagingException;
-import jakarta.validation.constraints.AssertTrue;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,7 +76,7 @@ class UserServiceTest {
 //        Mockito.when(this.userService.createNewUser(any())).thenReturn(user);
 //        Mockito.when(this.userService.createUserToken(any())).thenReturn(userToken);
         Mockito.when(this.modelMapper.map(any(), any())).thenReturn(userDTO);
-        UserDTO result = this.userService.signUp(userRegisterDTO);
+        UserDTO result = this.userService.register(userRegisterDTO);
         Assertions.assertAll(
                 () -> assertNotNull(result.getId()),
                 () -> assertEquals(result.getUsername(), userRegisterDTO.username),

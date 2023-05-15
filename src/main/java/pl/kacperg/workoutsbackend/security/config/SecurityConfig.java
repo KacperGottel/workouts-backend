@@ -74,17 +74,13 @@ public class SecurityConfig {
         return httpSecurityLogoutConfigurer ->
                 httpSecurityLogoutConfigurer
                         .logoutUrl("/api/v1/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            log.info("User logged out");
-                        })
+                        .logoutSuccessHandler((request, response, authentication) -> log.info("User logged out"))
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID");
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder();}
 
     @Bean
     JwtDecoder jwtDecoder() {
@@ -105,9 +101,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:4200/**"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH","DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

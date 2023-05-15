@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kacperg.workoutsbackend.security.service.TokenService;
@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final UserTokenRepository userTokenRepository;
@@ -35,16 +35,16 @@ public class UserService {
     private final EmailService emailService;
 
     @Transactional
-    public UserDTO signUp(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException, MessagingException {
+    public UserDTO register(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException, MessagingException {
         if (this.userRepository.findByEmail(registerDTO.email).isPresent()) {
             throw new UserAlreadyExistsException("User already exists");
         }
-        User user = createNewUser(registerDTO);
-        log.info("NEW USER CREATED: {}", user.getEmail());
-        UserToken userToken = createUserToken(user);
-        log.info("NEW TOKEN CREATED FOR: {}", user.getEmail());
-        this.emailService.sendInitTokenEmail(registerDTO, userToken.getToken());
-        return modelMapper.map(user, UserDTO.class);
+        User newUser = createNewUser(registerDTO);
+        log.info("NEW USER CREATED: {}", newUser.getEmail());
+        UserToken newUserToken = createUserToken(newUser);
+        log.info("USER: {}, TOKEN: {}", newUser.getEmail(), newUserToken.getToken());
+        this.emailService.sendInitTokenEmail(registerDTO, newUserToken.getToken());
+        return modelMapper.map(newUser, UserDTO.class);
     }
 
 
