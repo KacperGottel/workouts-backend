@@ -1,4 +1,4 @@
-package pl.kacperg.workoutsbackend.utils.exception;
+package pl.kacperg.workoutsbackend.utils.exception.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

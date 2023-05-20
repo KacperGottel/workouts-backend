@@ -10,6 +10,7 @@ import pl.kacperg.workoutsbackend.user.dto.UserDTO;
 import pl.kacperg.workoutsbackend.user.dto.UserRegisterDTO;
 import pl.kacperg.workoutsbackend.user.exception.UserAlreadyExistsException;
 import pl.kacperg.workoutsbackend.user.service.UserService;
+import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 import pl.kacperg.workoutsbackend.utils.validator.FieldsValidator;
 
 @RestController
@@ -22,7 +23,7 @@ public class UserRegisterController {
     private final FieldsValidator fieldsValidator;
 
     @PostMapping
-    public ResponseEntity<UserDTO> register(@Validated @RequestBody UserRegisterDTO userDTO, BindingResult bindingResult) throws UserAlreadyExistsException, MessagingException {
+    public ResponseEntity<UserDTO> register(@Validated @RequestBody UserRegisterDTO userDTO, BindingResult bindingResult) throws UserAlreadyExistsException, MessagingException, PasswordSameEmailException {
         fieldsValidator.validate(bindingResult);
         UserDTO dto = this.userService.register(userDTO);
         return ResponseEntity.ok(dto);

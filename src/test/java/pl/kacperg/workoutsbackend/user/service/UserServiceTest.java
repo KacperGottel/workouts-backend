@@ -20,6 +20,7 @@ import pl.kacperg.workoutsbackend.user.model.UserStatus;
 import pl.kacperg.workoutsbackend.user.model.UserToken;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
+import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -44,7 +45,7 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    void signUp() throws UserAlreadyExistsException, MessagingException {
+    void signUp() throws UserAlreadyExistsException, MessagingException, PasswordSameEmailException {
         UserRegisterDTO userRegisterDTO = new UserRegisterDTO("email@email.com", "password", "User");
         User user = User.of()
                 .id(1L)
@@ -73,8 +74,6 @@ class UserServiceTest {
                 .build();
         Mockito.when(this.userRepository.findByEmail(userRegisterDTO.email)).thenReturn(Optional.empty());
         Mockito.when(this.userRepository.save(any())).thenReturn(user);
-//        Mockito.when(this.userService.createNewUser(any())).thenReturn(user);
-//        Mockito.when(this.userService.createUserToken(any())).thenReturn(userToken);
         Mockito.when(this.modelMapper.map(any(), any())).thenReturn(userDTO);
         UserDTO result = this.userService.register(userRegisterDTO);
         Assertions.assertAll(

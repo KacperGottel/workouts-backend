@@ -19,6 +19,7 @@ import pl.kacperg.workoutsbackend.user.model.UserToken;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
 import pl.kacperg.workoutsbackend.utils.email.EmailService;
+import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 
 import java.time.LocalDateTime;
 
@@ -35,16 +36,23 @@ public class UserService {
     private final EmailService emailService;
 
     @Transactional
-    public UserDTO register(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException, MessagingException {
-        if (this.userRepository.findByEmail(registerDTO.email).isPresent()) {
-            throw new UserAlreadyExistsException(String.format("User already exists with email %s", registerDTO.email));
-        }
+    public UserDTO register(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException, MessagingException, PasswordSameEmailException {
+        validateUserData(registerDTO);
         User newUser = createNewUser(registerDTO);
         log.info("NEW USER CREATED: {}", newUser.getEmail());
         UserToken newUserToken = createUserToken(newUser);
         log.info("USER: {}, TOKEN: {}", newUser.getEmail(), newUserToken.getToken());
         this.emailService.sendInitTokenEmail(registerDTO, newUserToken.getToken());
         return modelMapper.map(newUser, UserDTO.class);
+    }
+
+    private void validateUserData(UserRegisterDTO registerDTO) throws UserAlreadyExistsException, PasswordSameEmailException {
+        if (this.userRepository.findByEmail(registerDTO.email).isPresent()) {
+            throw new UserAlreadyExistsException(String.format("User already exists with email %s", registerDTO.email));
+        }
+        if (registerDTO.email.equals(registerDTO.password)) {
+            throw new PasswordSameEmailException("Password can not be same as email");
+        }
     }
 
 
