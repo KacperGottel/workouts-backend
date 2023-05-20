@@ -37,7 +37,7 @@ public class UserService {
     @Transactional
     public UserDTO register(@Valid UserRegisterDTO registerDTO) throws UserAlreadyExistsException, MessagingException {
         if (this.userRepository.findByEmail(registerDTO.email).isPresent()) {
-            throw new UserAlreadyExistsException("User already exists");
+            throw new UserAlreadyExistsException(String.format("User already exists with email %s", registerDTO.email));
         }
         User newUser = createNewUser(registerDTO);
         log.info("NEW USER CREATED: {}", newUser.getEmail());
