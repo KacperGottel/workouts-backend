@@ -21,7 +21,9 @@ import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
 import pl.kacperg.workoutsbackend.utils.email.EmailService;
 import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -81,5 +83,10 @@ public class UserService {
 
     public void confirmUserToken(String token) {
         this.tokenService.verifyUserToken(token);
+    }
+
+    public UserDTO getUserInfoDto(String email) throws UserPrincipalNotFoundException {
+        User user = this.userRepository.findByEmail(email).orElseThrow(()->new UserPrincipalNotFoundException(email));
+        return this.modelMapper.map(user, UserDTO.class);
     }
 }
