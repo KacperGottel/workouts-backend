@@ -27,6 +27,7 @@ public class ExerciseController {
     public ResponseEntity<WorkoutDTO> drawWorkout(){
         return ResponseEntity.ok(this.exerciseService.drawWorkout());
     }
+
     @PostMapping("")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<Void> createExercise(@Validated @RequestBody ExerciseDTO exerciseDTO, BindingResult bindingResult) throws ExcerciseAlreadyExistsException {

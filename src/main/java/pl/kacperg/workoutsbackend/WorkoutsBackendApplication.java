@@ -11,12 +11,16 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import pl.kacperg.workoutsbackend.security.config.RsaKeyProperties;
+import pl.kacperg.workoutsbackend.security.service.TokenService;
 import pl.kacperg.workoutsbackend.user.model.Scope;
 import pl.kacperg.workoutsbackend.user.model.User;
 import pl.kacperg.workoutsbackend.user.model.UserStatus;
+import pl.kacperg.workoutsbackend.user.model.UserToken;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
+import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @SpringBootApplication
 @EnableConfigurationProperties(RsaKeyProperties.class)
@@ -24,6 +28,7 @@ import java.time.LocalDateTime;
 public class WorkoutsBackendApplication {
 
     private final UserRepository userRepository;
+    private final UserTokenRepository userTokenRepository;
     private final PasswordEncoder encoder;
 
     public static void main(String[] args) {
@@ -34,16 +39,18 @@ public class WorkoutsBackendApplication {
     CommandLineRunner commandLineRunner() {
         return args -> {
             if (userRepository.findByEmail("kacper@test.pl").isEmpty()) {
-                this.userRepository.save(
+                User user = this.userRepository.save(
                         new User(
                                 1L,
                                 "kacper@test.pl",
                                 "Kacper",
                                 encoder.encode("W^7HH345GhloL0i^"),
-                                Scope.ADMIN,
+                                Scope.USER,
                                 LocalDateTime.now(),
                                 LocalDateTime.now().plusYears(1),
                                 UserStatus.ENABLED));
+                UserToken token = UserToken.of().user(user).token(UUID.randomUUID().toString()).build();
+                userTokenRepository.save(token);
             }
         };
     }
