@@ -3,14 +3,15 @@ package pl.kacperg.workoutsbackend.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import pl.kacperg.workoutsbackend.user.dto.UserDTO;
+import pl.kacperg.workoutsbackend.user.dto.UserUpdateInfoDTO;
+import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.user.service.UserService;
+import pl.kacperg.workoutsbackend.utils.validator.FieldsValidator;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.security.Principal;
 
 @RestController
@@ -20,11 +21,22 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final FieldsValidator fieldsValidator;
 
     @GetMapping("")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    public ResponseEntity<UserDTO> getUserInfo(Principal principal) throws UserPrincipalNotFoundException {
+    public ResponseEntity<UserDTO> getUserInfo(Principal principal) throws UserNotFoundException {
         UserDTO userDTO = this.userService.getUserInfoDto(principal.getName());
         return ResponseEntity.ok(userDTO);
+    }
+
+    @PostMapping("")
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    public ResponseEntity<UserDTO> updateUserInfo(Principal principal,
+                                                  @Validated @RequestBody UserUpdateInfoDTO userUpdateInfoDTO,
+                                                  BindingResult bindingResult) throws UserNotFoundException {
+        fieldsValidator.validate(bindingResult);
+        this.userService.updateUserinfo(principal.getName(), userUpdateInfoDTO);
+        return ResponseEntity.ok().build();
     }
 }

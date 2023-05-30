@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kacperg.workoutsbackend.security.service.TokenService;
 import pl.kacperg.workoutsbackend.user.dto.UserDTO;
 import pl.kacperg.workoutsbackend.user.dto.UserRegisterDTO;
+import pl.kacperg.workoutsbackend.user.dto.UserUpdateInfoDTO;
+import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 import pl.kacperg.workoutsbackend.user.exception.UserAlreadyExistsException;
+import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.user.model.Scope;
 import pl.kacperg.workoutsbackend.user.model.User;
 import pl.kacperg.workoutsbackend.user.model.UserStatus;
@@ -19,11 +22,8 @@ import pl.kacperg.workoutsbackend.user.model.UserToken;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
 import pl.kacperg.workoutsbackend.utils.email.EmailService;
-import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -85,8 +85,15 @@ public class UserService {
         this.tokenService.verifyUserToken(token);
     }
 
-    public UserDTO getUserInfoDto(String email) throws UserPrincipalNotFoundException {
-        User user = this.userRepository.findByEmail(email).orElseThrow(()->new UserPrincipalNotFoundException(email));
+    public UserDTO getUserInfoDto(String email) throws UserNotFoundException {
+        User user = this.userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException(email));
         return this.modelMapper.map(user, UserDTO.class);
+    }
+
+    @Transactional
+    public void updateUserinfo(String email, UserUpdateInfoDTO userUpdateInfoDTO) throws UserNotFoundException {
+        User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        user.setEmail(userUpdateInfoDTO.email);
+        user.setUsername(userUpdateInfoDTO.username);
     }
 }
