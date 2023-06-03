@@ -5,9 +5,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
+import pl.kacperg.workoutsbackend.exercise.model.Exercise;
+import pl.kacperg.workoutsbackend.exercise.repository.ExerciseRepository;
 import pl.kacperg.workoutsbackend.security.service.TokenService;
 import pl.kacperg.workoutsbackend.user.dto.UserDTO;
 import pl.kacperg.workoutsbackend.user.dto.UserRegisterDTO;
@@ -32,6 +37,7 @@ public class UserService {
 
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
+    private final ExerciseRepository exerciseRepository;
     private final TokenService tokenService;
     private final UserTokenRepository userTokenRepository;
     private final ModelMapper modelMapper;
@@ -86,7 +92,7 @@ public class UserService {
     }
 
     public UserDTO getUserInfoDto(String email) throws UserNotFoundException {
-        User user = this.userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException(email));
+        User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         return this.modelMapper.map(user, UserDTO.class);
     }
 
@@ -95,5 +101,11 @@ public class UserService {
         User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         user.setEmail(userUpdateInfoDTO.email);
         user.setUsername(userUpdateInfoDTO.username);
+    }
+
+    public Page<ExerciseDTO> getUserExerciseDtoList(String email, Pageable pageable) throws UserNotFoundException {
+        User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        Page<Exercise> userExercises = this.exerciseRepository.findAllByUserId(user.getId(), pageable);
+        return userExercises.map(exercise -> modelMapper.map(exercise, ExerciseDTO.class));
     }
 }

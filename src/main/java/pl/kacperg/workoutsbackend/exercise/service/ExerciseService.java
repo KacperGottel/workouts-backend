@@ -13,6 +13,9 @@ import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
 import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 import pl.kacperg.workoutsbackend.exercise.repository.ExerciseRepository;
+import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
+import pl.kacperg.workoutsbackend.user.model.User;
+import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 
 import static pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory.*;
 
@@ -21,6 +24,7 @@ import static pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory.*;
 public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     public WorkoutDTO drawWorkout() {
@@ -33,7 +37,8 @@ public class ExerciseService {
     }
 
     @Transactional
-    public void createExercise(@NonNull ExerciseDTO exerciseDTO) throws ExcerciseAlreadyExistsException {
+    public void createExercise(@NonNull ExerciseDTO exerciseDTO, String email) throws ExcerciseAlreadyExistsException, UserNotFoundException {
+        User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         Exercise exercise = Exercise.of()
                 .category(exerciseDTO.getCategory())
                 .name(validateName(exerciseDTO.getName()))
@@ -42,6 +47,7 @@ public class ExerciseService {
                 .imgUrl(exerciseDTO.getImgUrl())
                 .series(Integer.valueOf(exerciseDTO.getSeries()))
                 .reps(Integer.valueOf(exerciseDTO.getReps()))
+                .user(user)
                 .build();
         this.exerciseRepository.save(exercise);
     }
