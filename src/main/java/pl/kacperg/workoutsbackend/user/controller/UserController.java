@@ -52,11 +52,11 @@ public class UserController {
     public ResponseEntity<Page<ExerciseDTO>> getUserExerciseList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "username,asc") String sort,
+            @RequestParam(defaultValue = "category, asc") String sort,
             @RequestParam(defaultValue = "") String filter,
             Principal principal) throws UserNotFoundException {
         Sort pageableSort = parseSort(sort);
-        Pageable pageable = (Pageable) PageRequest.of(page, size, pageableSort);
+        Pageable pageable = PageRequest.of(page, size, pageableSort);
         Page<ExerciseDTO> exerciseDTOS = this.userService.getUserExerciseDtoList(principal.getName(), pageable);
         return ResponseEntity.ok(exerciseDTOS);
     }
