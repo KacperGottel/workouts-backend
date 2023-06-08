@@ -132,9 +132,8 @@ public class UserService {
         if (filter != null && !filter.isEmpty()) {
             Predicate namePredicate = cb.like(cb.lower(root.get("name")), "%" + filter.toLowerCase() + "%");
             Predicate categoryPredicate = cb.like(cb.lower(root.get("category")), "%" + filter.toLowerCase() + "%");
-            Predicate descriptionPredicate = cb.like(cb.lower(root.get("description")), "%" + filter.toLowerCase() + "%");
 
-            predicates.add(cb.or(namePredicate, categoryPredicate, descriptionPredicate));
+            predicates.add(cb.or(namePredicate, categoryPredicate));
         }
 
         predicates.add(cb.equal(root.get("user").get("id"), userId));
