@@ -57,7 +57,7 @@ public class UserController {
             Principal principal) throws UserNotFoundException {
         Sort pageableSort = parseSort(sort);
         Pageable pageable = PageRequest.of(page, size, pageableSort);
-        Page<ExerciseDTO> exerciseDTOS = this.userService.getUserExerciseDtoList(principal.getName(), pageable);
+        Page<ExerciseDTO> exerciseDTOS = this.userService.getUserExerciseDtoList(principal.getName(), pageable, filter);
         return ResponseEntity.ok(exerciseDTOS);
     }
 }
