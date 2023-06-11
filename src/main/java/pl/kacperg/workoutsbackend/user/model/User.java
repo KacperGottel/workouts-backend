@@ -4,10 +4,11 @@ package pl.kacperg.workoutsbackend.user.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
+import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -38,5 +39,19 @@ public class User implements Serializable {
     @Column(name = "user_status")
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Exercise> exercises;
+
+    @Builder(builderMethodName = "of")
+    public User(Long id, String email, String username, String password, Scope scope, LocalDateTime created, LocalDateTime expired, UserStatus userStatus) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.scope = scope;
+        this.created = created;
+        this.expired = expired;
+        this.userStatus = userStatus;
+    }
 
 }

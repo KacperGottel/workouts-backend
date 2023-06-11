@@ -1,10 +1,11 @@
 package pl.kacperg.workoutsbackend.exercise.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 
 import java.util.Optional;
@@ -16,5 +17,8 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     Optional<Exercise> findRandomByCategory(@Param("category") String category);
 
     Optional<Exercise> findAllByNameContaining(String name);
+
     Optional<Exercise> findAllByDescriptionContaining(String description);
+
+    Page<Exercise> findAllByUserId(Long id, Pageable pageable);
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
+import pl.kacperg.workoutsbackend.user.model.User;
 
 @Entity
 @NoArgsConstructor
@@ -33,4 +34,7 @@ public class Exercise {
     private Integer series;
     @Column(name = "reps")
     private Integer reps;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

@@ -10,7 +10,10 @@ import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.dto.WorkoutDTO;
 import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.exercise.service.ExerciseService;
+import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.utils.validator.FieldsValidator;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/workout")
@@ -23,15 +26,19 @@ public class ExerciseController {
 
 
     @GetMapping("")
-    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_USER')")
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<WorkoutDTO> drawWorkout(){
         return ResponseEntity.ok(this.exerciseService.drawWorkout());
     }
+
     @PostMapping("")
-    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_USER')")
-    public ResponseEntity<Void> createExercise(@Validated @RequestBody ExerciseDTO exerciseDTO, BindingResult bindingResult) throws ExcerciseAlreadyExistsException {
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
+    public ResponseEntity<Void> createExercise(
+            @Validated @RequestBody ExerciseDTO exerciseDTO,
+            Principal principal,
+            BindingResult bindingResult) throws ExcerciseAlreadyExistsException, UserNotFoundException {
         fieldsValidator.validate(bindingResult);
-        this.exerciseService.createExercise(exerciseDTO);
+        this.exerciseService.createExercise(exerciseDTO, principal.getName());
         return ResponseEntity.ok().build();
     }
 }
