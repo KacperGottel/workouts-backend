@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 import pl.kacperg.workoutsbackend.exercise.repository.ExerciseRepository;
@@ -106,7 +108,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserinfo(String email, UserUpdateInfoDTO userUpdateInfoDTO) throws UserNotFoundException {
+    public void updateUserinfo(String email, @Valid UserUpdateInfoDTO userUpdateInfoDTO) throws UserNotFoundException {
         User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         user.setEmail(userUpdateInfoDTO.email);
         user.setUsername(userUpdateInfoDTO.username);
