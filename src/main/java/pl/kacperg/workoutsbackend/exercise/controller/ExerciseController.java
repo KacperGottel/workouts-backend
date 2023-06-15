@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
+import pl.kacperg.workoutsbackend.exercise.dto.NewExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.dto.WorkoutDTO;
 import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.exercise.service.ExerciseService;
@@ -34,7 +35,7 @@ public class ExerciseController {
     @PostMapping("")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<Void> createExercise(
-            @Validated @RequestBody ExerciseDTO exerciseDTO,
+            @Validated @RequestBody NewExerciseDTO exerciseDTO,
             Principal principal,
             BindingResult bindingResult) throws ExcerciseAlreadyExistsException, UserNotFoundException {
         fieldsValidator.validate(bindingResult);
