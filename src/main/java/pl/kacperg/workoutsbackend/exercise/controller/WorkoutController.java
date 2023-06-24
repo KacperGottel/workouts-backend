@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.kacperg.workoutsbackend.exercise.dto.NewExerciseDTO;
+import pl.kacperg.workoutsbackend.exercise.dto.WorkoutDTO;
 import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.exercise.service.ExerciseService;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
@@ -15,22 +16,18 @@ import pl.kacperg.workoutsbackend.utils.validator.FieldsValidator;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/v1/exercise")
+@RequestMapping("/api/v1/workout")
 @RequiredArgsConstructor
 @CrossOrigin
-public class ExerciseController {
+public class WorkoutController {
 
     private final ExerciseService exerciseService;
     private final FieldsValidator fieldsValidator;
 
-    @PostMapping
+
+    @GetMapping("")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    public ResponseEntity<Void> createExercise(
-            @Validated @RequestBody NewExerciseDTO exerciseDTO,
-            Principal principal,
-            BindingResult bindingResult) throws ExcerciseAlreadyExistsException, UserNotFoundException {
-        fieldsValidator.validate(bindingResult);
-        this.exerciseService.createExercise(exerciseDTO, principal.getName());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<WorkoutDTO> drawWorkout(){
+        return ResponseEntity.ok(this.exerciseService.drawWorkout());
     }
 }
