@@ -23,7 +23,8 @@ public class UserRegisterController {
     private final FieldsValidator fieldsValidator;
 
     @PostMapping
-    public ResponseEntity<UserDTO> register(@Validated @RequestBody UserRegisterDTO userDTO, BindingResult bindingResult) throws UserAlreadyExistsException, MessagingException, PasswordSameEmailException {
+    public ResponseEntity<UserDTO> register(@Validated @RequestBody UserRegisterDTO userDTO, BindingResult bindingResult)
+            throws UserAlreadyExistsException, MessagingException, PasswordSameEmailException {
         fieldsValidator.validate(bindingResult);
         UserDTO dto = this.userService.register(userDTO);
         return ResponseEntity.ok(dto);

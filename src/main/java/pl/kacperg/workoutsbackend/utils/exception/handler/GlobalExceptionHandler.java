@@ -1,6 +1,7 @@
 package pl.kacperg.workoutsbackend.utils.exception.handler;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -58,6 +59,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PasswordSameEmailException.class)
     public ResponseEntity<String> handlePasswordSameEmailException(PasswordSameEmailException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public ResponseEntity<String> handlePUnexpectedTypeException(UnexpectedTypeException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

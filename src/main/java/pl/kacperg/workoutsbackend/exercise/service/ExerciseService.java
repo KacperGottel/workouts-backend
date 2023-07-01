@@ -2,12 +2,13 @@ package pl.kacperg.workoutsbackend.exercise.service;
 
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.NonNull;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
+import pl.kacperg.workoutsbackend.exercise.dto.NewExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.dto.WorkoutDTO;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
 import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
@@ -37,7 +38,7 @@ public class ExerciseService {
     }
 
     @Transactional
-    public void createExercise(@NonNull ExerciseDTO exerciseDTO, String email) throws ExcerciseAlreadyExistsException, UserNotFoundException {
+    public void createExercise(@Valid NewExerciseDTO exerciseDTO, String email) throws ExcerciseAlreadyExistsException, UserNotFoundException {
         User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         Exercise exercise = Exercise.of()
                 .category(exerciseDTO.getCategory())
