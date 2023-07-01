@@ -45,7 +45,7 @@ public class WorkoutsBackendApplication {
                                 "kacper@test.pl",
                                 "Kacper",
                                 encoder.encode("W^7HH345GhloL0i^"),
-                                Scope.USER,
+                                Scope.ADMIN,
                                 LocalDateTime.now(),
                                 LocalDateTime.now().plusYears(1),
                                 UserStatus.ENABLED));
