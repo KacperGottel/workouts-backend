@@ -1,7 +1,6 @@
-create table workouts_db.user
+create table users
 (
-    id          bigint auto_increment
-        primary key,
+    id          bigint auto_increment primary key,
     created     datetime     null,
     email       varchar(255) null,
     expired     datetime     null,
@@ -10,17 +9,36 @@ create table workouts_db.user
     user_status varchar(255) null,
     username    varchar(255) null
 )
-    engine = MyISAM;
+    engine = InnoDB;
 
-create table workouts_db.user_token
+create table user_token
 (
-    id      bigint auto_increment
-        primary key,
+    id      bigint auto_increment primary key,
     token   varchar(255) null,
-    user_id bigint       null
+    user_id bigint       not null
 )
-    engine = MyISAM;
+    engine = InnoDB;
 
 create index FK_user_token
-    on workouts_db.user_token (user_id);
+    on user_token (user_id);
+
+CREATE TABLE exercise
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category    VARCHAR(255),
+    name        VARCHAR(255),
+    description TEXT,
+    video_url   VARCHAR(255),
+    img_url     VARCHAR(255),
+    status      VARCHAR(255),
+    series      INT,
+    reps        INT,
+    user_id     BIGINT
+)
+    engine = InnoDB;
+
+ALTER TABLE exercise
+    ADD CONSTRAINT fk_user_exercise
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
 

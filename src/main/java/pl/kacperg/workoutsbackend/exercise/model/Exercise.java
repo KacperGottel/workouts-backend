@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
+import pl.kacperg.workoutsbackend.exercise.enums.ExerciseStatus;
 import pl.kacperg.workoutsbackend.user.model.User;
 
 @Entity
@@ -34,7 +35,10 @@ public class Exercise {
     private Integer series;
     @Column(name = "reps")
     private Integer reps;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ExerciseStatus status;
+    @ManyToOne
+    @JoinColumn(name = "user_id",  foreignKey = @ForeignKey(name = "fk_user_exercise"))
     private User user;
 }

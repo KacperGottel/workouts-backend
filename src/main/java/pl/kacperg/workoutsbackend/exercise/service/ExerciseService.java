@@ -11,6 +11,7 @@ import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.dto.NewExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.dto.WorkoutDTO;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
+import pl.kacperg.workoutsbackend.exercise.enums.ExerciseStatus;
 import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 import pl.kacperg.workoutsbackend.exercise.repository.ExerciseRepository;
@@ -49,6 +50,7 @@ public class ExerciseService {
                 .series(Integer.valueOf(exerciseDTO.getSeries()))
                 .reps(Integer.valueOf(exerciseDTO.getReps()))
                 .user(user)
+                .status(ExerciseStatus.WAITING_FOR_ACCEPTANCE)
                 .build();
         this.exerciseRepository.save(exercise);
     }

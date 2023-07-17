@@ -3,9 +3,14 @@ server:
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:43307/workouts_db?sessionVariables=sql_mode=''&serverTimezone=Europe/Warsaw
-    username: workouts
-    password: 1234
+    url: jdbc:mysql://localhost:3306/workouts?sessionVariables=sql_mode=''&serverTimezone=Europe/Warsaw
+    username: user
+    password: user
+  flyway:
+    url: jdbc:mysql://localhost:3306/workouts?sessionVariables=sql_mode=''&serverTimezone=Europe/Warsaw
+    user: user
+    password: user
+    locations: classpath:db.migration
   jpa:
     hibernate:
       ddl-auto: update

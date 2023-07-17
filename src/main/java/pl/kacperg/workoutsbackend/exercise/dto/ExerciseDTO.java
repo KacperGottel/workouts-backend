@@ -42,4 +42,8 @@ public class ExerciseDTO {
     @NotBlank
     @NotNull
     private String reps;
+    @JsonProperty("status")
+    @NotBlank
+    @NotNull
+    private String status;
 }

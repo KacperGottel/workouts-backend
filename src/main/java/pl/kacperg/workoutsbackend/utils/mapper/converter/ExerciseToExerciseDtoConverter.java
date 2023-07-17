@@ -25,6 +25,7 @@ public class ExerciseToExerciseDtoConverter extends AbstractConverter<Exercise, 
                 .imgUrl(exercise.getImgUrl())
                 .reps(String.valueOf(exercise.getReps()))
                 .series(String.valueOf(exercise.getSeries()))
+                .status(String.valueOf(exercise.getStatus()))
                 .build();
     }
 }

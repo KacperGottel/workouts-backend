@@ -37,7 +37,7 @@ public class AuthController {
     @GetMapping("/validate")
     public ResponseEntity<TokenValidateDTO> validateToken(Principal principal) throws UserNotFoundException {
         TokenValidateDTO tokenDTO = new TokenValidateDTO();
-        tokenDTO.setAdmin(userService.checkIsAdmin(principal.getName()));
+        tokenDTO.setAdmin(userService.isAdmin(principal.getName()));
         return ResponseEntity.ok(tokenDTO);
     }
 

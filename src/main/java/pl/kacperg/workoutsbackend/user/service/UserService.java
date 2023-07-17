@@ -155,7 +155,7 @@ public class UserService {
         return new PageImpl<>(pagedResults, pageable, totalCount);
     }
 
-    public boolean checkIsAdmin(String email) throws UserNotFoundException {
+    public boolean isAdmin(String email) throws UserNotFoundException {
         User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         return user.getScope().equals(Scope.ADMIN);
     }

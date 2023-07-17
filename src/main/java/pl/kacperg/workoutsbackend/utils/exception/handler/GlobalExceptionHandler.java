@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import pl.kacperg.workoutsbackend.admin.exception.PermissionDeniedException;
 import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 import pl.kacperg.workoutsbackend.user.exception.UserAlreadyExistsException;
@@ -61,9 +62,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlePasswordSameEmailException(PasswordSameEmailException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(UnexpectedTypeException.class)
     public ResponseEntity<String> handlePUnexpectedTypeException(UnexpectedTypeException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PermissionDeniedException.class)
+    public ResponseEntity<String> handlePermissionDeniedException(PermissionDeniedException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 }
 
