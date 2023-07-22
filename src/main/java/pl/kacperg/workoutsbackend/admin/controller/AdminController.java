@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.kacperg.workoutsbackend.admin.exception.PermissionDeniedException;
 import pl.kacperg.workoutsbackend.admin.service.AdminService;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
+import pl.kacperg.workoutsbackend.exercise.exception.ExerciseNotFoundException;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.utils.validator.FieldsValidator;
 
@@ -39,5 +40,23 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size, pageableSort);
         Page<ExerciseDTO> exerciseDTOS = this.adminService.getExercisesForAcceptance(principal.getName(), pageable, filter);
         return ResponseEntity.ok(exerciseDTOS);
+    }
+
+    @PostMapping("/exercise")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> acceptExercise(
+            @RequestParam Long id,
+            Principal principal) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        this.adminService.acceptExercise(principal.getName(), id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/exercise")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> deleteExercise(
+            @RequestParam Long id,
+            Principal principal) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        this.adminService.deleteExercise(principal.getName(), id);
+        return ResponseEntity.ok().build();
     }
 }

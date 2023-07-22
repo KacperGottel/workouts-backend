@@ -12,20 +12,18 @@ import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.kacperg.workoutsbackend.admin.exception.PermissionDeniedException;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseStatus;
+import pl.kacperg.workoutsbackend.exercise.exception.ExerciseNotFoundException;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 import pl.kacperg.workoutsbackend.exercise.repository.ExerciseRepository;
-import pl.kacperg.workoutsbackend.security.service.TokenService;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.user.model.Scope;
 import pl.kacperg.workoutsbackend.user.model.User;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
-import pl.kacperg.workoutsbackend.user.repository.UserTokenRepository;
-import pl.kacperg.workoutsbackend.utils.email.EmailService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,5 +87,21 @@ public class AdminService {
         if (!user.getScope().equals(Scope.ADMIN)) {
             throw new PermissionDeniedException(String.format("%s IS NOT AN ADMIN SCOPE", email));
         }
+    }
+
+    @Transactional
+    public void acceptExercise(String email, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        validateIsAdmin(email);
+        Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
+                .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
+        exercise.setStatus(ExerciseStatus.APPROVED);
+    }
+
+    @Transactional
+    public void deleteExercise(String email, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        validateIsAdmin(email);
+        Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
+                .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
+        exercise.setStatus(ExerciseStatus.REJECTED);
     }
 }

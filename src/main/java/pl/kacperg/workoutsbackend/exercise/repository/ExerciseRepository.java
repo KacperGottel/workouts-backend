@@ -24,4 +24,6 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     Page<Exercise> findAllByUserId(Long id, Pageable pageable);
 
     Page<Exercise> findAllByStatus(ExerciseStatus exerciseStatus, Pageable pageable);
+
+    Optional<Exercise> findByIdAndStatus(Long id, ExerciseStatus exerciseStatus);
 }

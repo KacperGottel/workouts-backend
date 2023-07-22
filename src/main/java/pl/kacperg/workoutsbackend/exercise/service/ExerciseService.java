@@ -12,7 +12,7 @@ import pl.kacperg.workoutsbackend.exercise.dto.NewExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.dto.WorkoutDTO;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseStatus;
-import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
+import pl.kacperg.workoutsbackend.exercise.exception.ExerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 import pl.kacperg.workoutsbackend.exercise.repository.ExerciseRepository;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
@@ -39,7 +39,7 @@ public class ExerciseService {
     }
 
     @Transactional
-    public void createExercise(@Valid NewExerciseDTO exerciseDTO, String email) throws ExcerciseAlreadyExistsException, UserNotFoundException {
+    public void createExercise(@Valid NewExerciseDTO exerciseDTO, String email) throws ExerciseAlreadyExistsException, UserNotFoundException {
         User user = this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         Exercise exercise = Exercise.of()
                 .category(exerciseDTO.getCategory())
@@ -55,18 +55,18 @@ public class ExerciseService {
         this.exerciseRepository.save(exercise);
     }
 
-    private String validateDescription(String description) throws ExcerciseAlreadyExistsException {
+    private String validateDescription(String description) throws ExerciseAlreadyExistsException {
         boolean isPresent = this.exerciseRepository.findAllByDescriptionContaining(description).isPresent();
         if (isPresent) {
-            throw new ExcerciseAlreadyExistsException("EXERCISE DESCRIPTION ALREADY EXISTS");
+            throw new ExerciseAlreadyExistsException("EXERCISE DESCRIPTION ALREADY EXISTS");
         }
         return description;
     }
 
-    private String validateName(String name) throws ExcerciseAlreadyExistsException {
+    private String validateName(String name) throws ExerciseAlreadyExistsException {
         boolean isPresent = this.exerciseRepository.findAllByNameContaining(name).isPresent();
         if (isPresent) {
-            throw new ExcerciseAlreadyExistsException("EXERCISE NAME ALREADY EXISTS");
+            throw new ExerciseAlreadyExistsException("EXERCISE NAME ALREADY EXISTS");
         }
         return name;
     }

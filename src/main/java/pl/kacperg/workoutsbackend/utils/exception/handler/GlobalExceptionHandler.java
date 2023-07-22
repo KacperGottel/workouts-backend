@@ -8,7 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.kacperg.workoutsbackend.admin.exception.PermissionDeniedException;
-import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
+import pl.kacperg.workoutsbackend.exercise.exception.ExerciseAlreadyExistsException;
+import pl.kacperg.workoutsbackend.exercise.exception.ExerciseNotFoundException;
 import pl.kacperg.workoutsbackend.user.exception.PasswordSameEmailException;
 import pl.kacperg.workoutsbackend.user.exception.UserAlreadyExistsException;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
@@ -23,8 +24,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ExcerciseAlreadyExistsException.class)
-    public ResponseEntity<String> handleExerciseAlreadyExistsException(ExcerciseAlreadyExistsException e) {
+    @ExceptionHandler(ExerciseAlreadyExistsException.class)
+    public ResponseEntity<String> handleExerciseAlreadyExistsException(ExerciseAlreadyExistsException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -70,6 +71,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PermissionDeniedException.class)
     public ResponseEntity<String> handlePermissionDeniedException(PermissionDeniedException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
+    @ExceptionHandler(ExerciseNotFoundException.class)
+    public ResponseEntity<String> handleExerciseNotFoundException(ExerciseNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 }
