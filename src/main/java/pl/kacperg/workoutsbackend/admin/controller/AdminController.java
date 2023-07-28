@@ -12,8 +12,8 @@ import pl.kacperg.workoutsbackend.admin.exception.PermissionDeniedException;
 import pl.kacperg.workoutsbackend.admin.service.AdminService;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
 import pl.kacperg.workoutsbackend.exercise.exception.ExerciseNotFoundException;
+import pl.kacperg.workoutsbackend.user.dto.UserDTO;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
-import pl.kacperg.workoutsbackend.utils.validator.FieldsValidator;
 
 import java.security.Principal;
 
@@ -26,7 +26,6 @@ import static pl.kacperg.workoutsbackend.utils.parser.SortParser.parseSort;
 public class AdminController {
 
     private final AdminService adminService;
-    private final FieldsValidator fieldsValidator;
 
     @GetMapping("/exercise")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
@@ -58,5 +57,19 @@ public class AdminController {
             Principal principal) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
         this.adminService.deleteExercise(principal.getName(), id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Page<UserDTO>> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "category, asc") String sort,
+            @RequestParam(defaultValue = "") String filter,
+            Principal principal) throws UserNotFoundException, PermissionDeniedException {
+        Sort pageableSort = parseSort(sort);
+        Pageable pageable = PageRequest.of(page, size, pageableSort);
+        Page<UserDTO> usersDTO = this.adminService.getUsers(principal.getName(), pageable, filter);
+        return ResponseEntity.ok(usersDTO);
     }
 }
