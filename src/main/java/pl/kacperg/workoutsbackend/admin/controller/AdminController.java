@@ -34,10 +34,10 @@ public class AdminController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "category, asc") String sort,
             @RequestParam(defaultValue = "") String filter,
-            Principal principal) throws UserNotFoundException, PermissionDeniedException {
+            Principal admin) throws UserNotFoundException, PermissionDeniedException {
         Sort pageableSort = parseSort(sort);
         Pageable pageable = PageRequest.of(page, size, pageableSort);
-        Page<ExerciseDTO> exerciseDTOS = this.adminService.getExercisesForAcceptance(principal.getName(), pageable, filter);
+        Page<ExerciseDTO> exerciseDTOS = this.adminService.getExercisesForAcceptance(admin.getName(), pageable, filter);
         return ResponseEntity.ok(exerciseDTOS);
     }
 
@@ -45,8 +45,8 @@ public class AdminController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> acceptExercise(
             @RequestParam Long id,
-            Principal principal) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
-        this.adminService.acceptExercise(principal.getName(), id);
+            Principal admin) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        this.adminService.acceptExercise(admin.getName(), id);
         return ResponseEntity.ok().build();
     }
 
@@ -54,8 +54,8 @@ public class AdminController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> deleteExercise(
             @RequestParam Long id,
-            Principal principal) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
-        this.adminService.deleteExercise(principal.getName(), id);
+            Principal admin) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        this.adminService.deleteExercise(admin.getName(), id);
         return ResponseEntity.ok().build();
     }
 
@@ -66,10 +66,28 @@ public class AdminController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "category, asc") String sort,
             @RequestParam(defaultValue = "") String filter,
-            Principal principal) throws UserNotFoundException, PermissionDeniedException {
+            Principal admin) throws UserNotFoundException, PermissionDeniedException {
         Sort pageableSort = parseSort(sort);
         Pageable pageable = PageRequest.of(page, size, pageableSort);
-        Page<UserDTO> usersDTO = this.adminService.getUsers(principal.getName(), pageable, filter);
+        Page<UserDTO> usersDTO = this.adminService.getUsers(admin.getName(), pageable, filter);
         return ResponseEntity.ok(usersDTO);
+    }
+
+    @DeleteMapping("/users/block")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> blockUser(
+            @RequestParam long id,
+            Principal admin) throws UserNotFoundException, PermissionDeniedException  {
+        this.adminService.blockUser(admin.getName(), id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/users/remove")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Void> removeUser(
+            @RequestParam long id,
+            Principal admin) throws UserNotFoundException, PermissionDeniedException {
+        this.adminService.removeUser(admin.getName(), id);
+        return ResponseEntity.ok().build();
     }
 }

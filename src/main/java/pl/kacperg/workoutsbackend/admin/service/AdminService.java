@@ -24,6 +24,7 @@ import pl.kacperg.workoutsbackend.user.dto.UserDTO;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.user.model.Scope;
 import pl.kacperg.workoutsbackend.user.model.User;
+import pl.kacperg.workoutsbackend.user.model.UserStatus;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class AdminService {
     private final ModelMapper modelMapper;
     private final EntityManager entityManager;
 
-    public Page<ExerciseDTO> getExercisesForAcceptance(String email, Pageable pageable, String filter) throws UserNotFoundException, PermissionDeniedDataAccessException, PermissionDeniedException {
-        validateIsAdmin(email);
+    public Page<ExerciseDTO> getExercisesForAcceptance(String adminEmail, Pageable pageable, String filter) throws UserNotFoundException, PermissionDeniedDataAccessException, PermissionDeniedException {
+        validateIsAdmin(adminEmail);
         if (filter != null && !filter.isEmpty() && !filter.isBlank()) {
             Page<Exercise> adminExercisesByCriteria = searchExercisesByCriteria(pageable, filter);
             return adminExercisesByCriteria.map(exercise -> modelMapper.map(exercise, ExerciseDTO.class));
@@ -91,23 +92,23 @@ public class AdminService {
     }
 
     @Transactional
-    public void acceptExercise(String email, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
-        validateIsAdmin(email);
+    public void acceptExercise(String adminEmail, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        validateIsAdmin(adminEmail);
         Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
                 .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
         exercise.setStatus(ExerciseStatus.APPROVED);
     }
 
     @Transactional
-    public void deleteExercise(String email, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
-        validateIsAdmin(email);
+    public void deleteExercise(String adminEmail, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        validateIsAdmin(adminEmail);
         Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
                 .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
         exercise.setStatus(ExerciseStatus.REJECTED);
     }
 
-    public Page<UserDTO> getUsers(String email, Pageable pageable, String filter) throws UserNotFoundException, PermissionDeniedException {
-        validateIsAdmin(email);
+    public Page<UserDTO> getUsers(String adminEmail, Pageable pageable, String filter) throws UserNotFoundException, PermissionDeniedException {
+        validateIsAdmin(adminEmail);
         if (filter != null && !filter.isEmpty() && !filter.isBlank()) {
             Page<User> usersByCriteria = searchUsersByCriteria(pageable, filter);
             return usersByCriteria.map(user -> modelMapper.map(user, UserDTO.class));
@@ -148,5 +149,19 @@ public class AdminService {
         List<User> pagedResults = results.subList(offset, endIndex);
 
         return new PageImpl<>(pagedResults, pageable, totalCount);
+    }
+
+    @Transactional
+    public void blockUser(String adminEmail, final long id) throws UserNotFoundException, PermissionDeniedException {
+        validateIsAdmin(adminEmail);
+        User user = this.userRepository.findByIdAndUserStatusNot(id, UserStatus.BLOCKED).orElseThrow(() -> new UserNotFoundException("user id: " + id));
+        user.setUserStatus(UserStatus.BLOCKED);
+    }
+
+    @Transactional
+    public void removeUser(String adminEmail, final long id) throws UserNotFoundException, PermissionDeniedException {
+        validateIsAdmin(adminEmail);
+        User user = this.userRepository.findByIdAndUserStatusNot(id, UserStatus.DELETED).orElseThrow(() -> new UserNotFoundException("user id: " + id));
+        user.setUserStatus(UserStatus.BLOCKED);
     }
 }
