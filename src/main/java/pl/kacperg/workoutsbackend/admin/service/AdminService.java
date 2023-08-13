@@ -50,6 +50,32 @@ public class AdminService {
         return adminExercises.map(exercise -> modelMapper.map(exercise, ExerciseDTO.class));
     }
 
+    @Transactional
+    public void acceptExercise(String adminEmail, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        validateIsAdmin(adminEmail);
+        Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
+                .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
+        exercise.setStatus(ExerciseStatus.APPROVED);
+    }
+
+    @Transactional
+    public void deleteExercise(String adminEmail, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
+        validateIsAdmin(adminEmail);
+        Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
+                .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
+        exercise.setStatus(ExerciseStatus.REJECTED);
+    }
+
+    public Page<UserDTO> getUsers(String adminEmail, Pageable pageable, String filter) throws UserNotFoundException, PermissionDeniedException {
+        validateIsAdmin(adminEmail);
+        if (filter != null && !filter.isEmpty() && !filter.isBlank()) {
+            Page<User> usersByCriteria = searchUsersByCriteria(pageable, filter);
+            return usersByCriteria.map(user -> modelMapper.map(user, UserDTO.class));
+        }
+        Page<User> users = this.userRepository.findAllByScope(Scope.USER, pageable);
+        return users.map(user -> modelMapper.map(user, UserDTO.class));
+    }
+
     @SuppressWarnings("DuplicatedCode")
     private Page<Exercise> searchExercisesByCriteria(Pageable pageable, String filter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -91,32 +117,6 @@ public class AdminService {
         }
     }
 
-    @Transactional
-    public void acceptExercise(String adminEmail, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
-        validateIsAdmin(adminEmail);
-        Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
-                .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
-        exercise.setStatus(ExerciseStatus.APPROVED);
-    }
-
-    @Transactional
-    public void deleteExercise(String adminEmail, Long id) throws UserNotFoundException, PermissionDeniedException, ExerciseNotFoundException {
-        validateIsAdmin(adminEmail);
-        Exercise exercise = this.exerciseRepository.findByIdAndStatus(id, ExerciseStatus.WAITING_FOR_ACCEPTANCE)
-                .orElseThrow(() -> new ExerciseNotFoundException(String.format("Exercise with id %s does not exist", id)));
-        exercise.setStatus(ExerciseStatus.REJECTED);
-    }
-
-    public Page<UserDTO> getUsers(String adminEmail, Pageable pageable, String filter) throws UserNotFoundException, PermissionDeniedException {
-        validateIsAdmin(adminEmail);
-        if (filter != null && !filter.isEmpty() && !filter.isBlank()) {
-            Page<User> usersByCriteria = searchUsersByCriteria(pageable, filter);
-            return usersByCriteria.map(user -> modelMapper.map(user, UserDTO.class));
-        }
-        Page<User> users = this.userRepository.findAll(pageable);
-        return users.map(user -> modelMapper.map(user, UserDTO.class));
-    }
-
     @SuppressWarnings("DuplicatedCode")
     private Page<User> searchUsersByCriteria(Pageable pageable, String filter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -125,7 +125,7 @@ public class AdminService {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter != null && !filter.isEmpty()) {
+        if (filter != null && !filter.isEmpty() && !filter.isBlank()) {
             Predicate namePredicate = cb.like(cb.lower(root.get("username")), "%" + filter.toLowerCase() + "%");
             Predicate categoryPredicate = cb.like(cb.lower(root.get("email")), "%" + filter.toLowerCase() + "%");
 
@@ -162,6 +162,6 @@ public class AdminService {
     public void removeUser(String adminEmail, final long id) throws UserNotFoundException, PermissionDeniedException {
         validateIsAdmin(adminEmail);
         User user = this.userRepository.findByIdAndUserStatusNot(id, UserStatus.DELETED).orElseThrow(() -> new UserNotFoundException("user id: " + id));
-        user.setUserStatus(UserStatus.BLOCKED);
+        user.setUserStatus(UserStatus.DELETED);
     }
 }

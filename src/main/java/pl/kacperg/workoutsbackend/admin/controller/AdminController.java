@@ -64,7 +64,7 @@ public class AdminController {
     public ResponseEntity<Page<UserDTO>> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "category, asc") String sort,
+            @RequestParam(defaultValue = "username, asc") String sort,
             @RequestParam(defaultValue = "") String filter,
             Principal admin) throws UserNotFoundException, PermissionDeniedException {
         Sort pageableSort = parseSort(sort);
