@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.user.model.UserStatus;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 
@@ -20,11 +21,12 @@ public class UserScheduler {
 
     private final UserRepository userRepository;
 
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "0 0 0 * * MON")
     @Transactional
     public void cleanupDeletedUsers() {
         LocalDateTime oneWeekAgo = LocalDate.now().minusWeeks(1).atStartOfDay();
-        userRepository.deleteAllByUserStatusAndCreatedBefore(UserStatus.DELETED, oneWeekAgo);
+        userRepository.findAllByUserStatusAndCreatedBefore(UserStatus.DELETED, oneWeekAgo)
+                .ifPresent(userRepository::deleteAllInBatch);
         log.warn("USERS WITH DELETED STATUS DELETED ACCORDING TO SCHEDULE");
     }
 }

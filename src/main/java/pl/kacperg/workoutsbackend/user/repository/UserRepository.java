@@ -9,6 +9,7 @@ import pl.kacperg.workoutsbackend.user.model.User;
 import pl.kacperg.workoutsbackend.user.model.UserStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,5 +21,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findAllByScope(Scope scope, Pageable pageable);
 
-    void deleteAllByUserStatusAndCreatedBefore(UserStatus userStatus, LocalDateTime created);
+    Optional<List<User>> findAllByUserStatusAndCreatedBefore(UserStatus userStatus, LocalDateTime oneWeekAgo);
 }

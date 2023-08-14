@@ -11,16 +11,17 @@ create table users
 )
     engine = InnoDB;
 
-create table user_token
+CREATE TABLE user_token
 (
     id      bigint auto_increment primary key,
     token   varchar(255) null,
-    user_id bigint       not null
+    user_id bigint       not null,
+    CONSTRAINT FK_user_token FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
-    engine = InnoDB;
+    ENGINE = InnoDB;
 
-create index FK_user_token
-    on user_token (user_id);
+CREATE INDEX IDX_user_token_user_id ON user_token (user_id);
+
 
 CREATE TABLE exercise
 (
