@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.user.model.UserStatus;
 import pl.kacperg.workoutsbackend.user.repository.UserRepository;
 

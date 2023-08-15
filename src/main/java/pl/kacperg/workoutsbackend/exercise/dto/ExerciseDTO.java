@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import pl.kacperg.workoutsbackend.exercise.enums.ExerciseCategory;
 
 @Data
 @SuperBuilder(builderMethodName = "of")
+@RequiredArgsConstructor
 public class ExerciseDTO {
     @JsonProperty("id")
     @NotBlank
