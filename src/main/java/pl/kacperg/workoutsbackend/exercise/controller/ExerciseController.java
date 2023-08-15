@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.kacperg.workoutsbackend.exercise.dto.NewExerciseDTO;
-import pl.kacperg.workoutsbackend.exercise.exception.ExcerciseAlreadyExistsException;
+import pl.kacperg.workoutsbackend.exercise.exception.ExerciseAlreadyExistsException;
 import pl.kacperg.workoutsbackend.exercise.service.ExerciseService;
 import pl.kacperg.workoutsbackend.user.exception.UserNotFoundException;
 import pl.kacperg.workoutsbackend.utils.validator.FieldsValidator;
@@ -28,7 +28,7 @@ public class ExerciseController {
     public ResponseEntity<Void> createExercise(
             @Validated @RequestBody NewExerciseDTO exerciseDTO,
             Principal principal,
-            BindingResult bindingResult) throws ExcerciseAlreadyExistsException, UserNotFoundException {
+            BindingResult bindingResult) throws ExerciseAlreadyExistsException, UserNotFoundException {
         fieldsValidator.validate(bindingResult);
         this.exerciseService.createExercise(exerciseDTO, principal.getName());
         return ResponseEntity.ok().build();
