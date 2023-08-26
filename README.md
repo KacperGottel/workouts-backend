@@ -1,14 +1,12 @@
 
 
-[USER_WALKTROUGHT](https://github.com/KacperGottel/workouts-backend/assets/90089220/a153b15a-76aa-43d6-b407-c2ea0d4860bf)
+[USER_WALKTROUGHT](https://github.com/KacperGottel/workouts-backend/assets/90089220/11f7e47a-3be0-4631-a473-a8a28eed315a)
 
 
-[ADMIN_WALKTROUGHT](https://github.com/KacperGottel/workouts-backend/assets/90089220/b8b774d8-6a9b-4d23-b770-6fd0b8da64be)
+[ADMIN_WALKTROUGHT](https://github.com/KacperGottel/workouts-backend/assets/90089220/a10fe17c-c8b5-4db9-a107-bc1ec6c5b786)
 
 
 ```docker-compose up -d```
 ```mvn clean install```
 ```mvn spring-boot:run```
-
-
 
