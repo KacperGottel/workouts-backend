@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kacperg.workoutsbackend.exercise.dto.ExerciseDTO;
+import pl.kacperg.workoutsbackend.exercise.enums.ExerciseStatus;
 import pl.kacperg.workoutsbackend.exercise.model.Exercise;
 import pl.kacperg.workoutsbackend.exercise.repository.ExerciseRepository;
 import pl.kacperg.workoutsbackend.security.service.TokenService;
@@ -118,7 +119,7 @@ public class UserService {
             Page<Exercise> userExercisesByCriteria = searchByCriteria(user.getId(), pageable, filter);
             return userExercisesByCriteria.map(exercise -> modelMapper.map(exercise, ExerciseDTO.class));
         }
-        Page<Exercise> userExercises = this.exerciseRepository.findAllByUserId(user.getId(), pageable);
+        Page<Exercise> userExercises = this.exerciseRepository.findAllByUserIdAndStatus(user.getId(), ExerciseStatus.APPROVED, pageable);
         return userExercises.map(exercise -> modelMapper.map(exercise, ExerciseDTO.class));
     }
 
@@ -137,6 +138,7 @@ public class UserService {
         }
 
         predicates.add(cb.equal(root.get("user").get("id"), userId));
+        predicates.add(cb.equal(root.get("status"), ExerciseStatus.APPROVED));
 
         query.where(cb.and(predicates.toArray(new Predicate[0])));
 
